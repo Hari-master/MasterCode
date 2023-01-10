@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+     <!-- Editing The profile -->
+     <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg mb-5">
+                    <div class="card-header">
+
+                        <a href="{{ request.META.HTTP_REFERER }}" style="text-decoration: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                            </svg>
+                            <i class="bi bi-arrow-left">Back Home</i>
+                        </a>
+                        <kbd class="align-right">Edit Your Profile</kbd>
+                    </div>
+                    <div class="card-body bg-light">
+                        <form class="form" action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            <label for="formFile" class="form-label" placeholder="Avatar...">{{field.label}}</label><br>
+                            <!-- <input class="form-control" type="file" id="formFile"> -->
+                            {{field}}<br>
+                            {% endfor %}
+                           
+                            
+                            <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-outline-dark">
+                                cancel
+                            </a>
+                            <button class="btn btn-primary" type="submit">update</button>
+                        </form>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    

@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+
+{% block content %}
+	<!-- Browse Topic -->
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+				<div class="card shadow-lg md-5">
+					<div class="card-header">
+						<a href="{{ request.META.HTTP_REFERER }}" style="text-decoration: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+							  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+							</svg>
+							<i class="bi bi-arrow-left">Back Home</i>
+						</a>
+						<kbd class="align-right">Browse Topic</kbd>
+					</div>
+					<div class="card-body">
+						<div class="container-fluid">
+							<form class="d-flex" method="GET" action="">
+								<input class="form-control me-2" type="search" name="q" placeholder="Search Topics..." aria-label="Search">
+								<button class="btn btn-primary" type="submit">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+										<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+									</svg>
+								</button>
+							</form><hr>
+							<a href="{% url 'home' %}" class="list-group-horizontal-lg" aria-current="true">
+								<i class="bi bi-arrow-left">All</i>
+								<span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topics.count}}</span>
+							</a><hr>
+							{% for topic in topics %}
+							<a href="{% url 'home' %}?q={{ topic.name }}" class="list-group-horizontal-lg" style="text-decoration: none;">
+								<i class="bi bi-arrow-left">{{ topic.name }}</i>
+								<span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topic.room_set.all.count}}</span>
+							</a><hr>
+							{% endfor %}
+						</div>
+						
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+{% endblock%}

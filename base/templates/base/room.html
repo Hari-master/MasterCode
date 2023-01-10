@@ -1,0 +1,176 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load static %}
+
+    <style>
+        .wrapper{
+            background-image: url('../images/background.png');
+        }
+    </style>
+
+    <div class="container-fluid">
+
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-7">
+                <div class="card shadow-lg mb-10">
+  
+                  <!--Room header-->
+                    <div class="card-header">
+                        <a href="{% url 'home' %}" style="text-decoration: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                            </svg>
+                            <i class="bi bi-arrow-left">Study Room</i>
+                        </a>
+                        {% if request.user == room.host %}
+                        <a href="{% url 'update-room' room.id %}" class="align-right">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                            </svg>
+                        </a>
+                        <a href="{% url 'delete-room' room.id %}" class="align-right">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                            </svg>
+                        </a>
+                        {% endif %}
+                    </div>
+  
+                    <!--Room body-->
+                    <div class="card-body">
+                        <h5 class="card-title">{{room.name}} <p class="text-mute align-right">{{room.created|timesince}}</p></h5>
+                        <p class="card-text">
+                            <i class="text-muted">hosted by</i>
+                            <a href="{% url 'user-profile' room.host.id %}" style="text-decoration: None;">
+                                <img class="img-circle" src="{{room.host.avatar.url}}" width="40px" height="40px" style="border-radius: 1000px;"/>
+                                <kbd>@{{ room.host.username }}</kbd>
+                            </a>
+                            <div class="btn-group d-block d-sm-none">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i>Participants</i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" id="scrollable" style="height: 200px;">
+                                    {% for user in participants %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'user-profile' user.id %}">
+                                            <img class="img-circle" src="{{user.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                            {{ user.username }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <!-- <div class="balign-right d-block d-sm-none">
+                                <button class="btn btn-dark dropdown-toggle" style="height: 30px;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i>Participants</i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" id="scrollable" style="height: 200px;">
+                                {% for user in participants %}
+                                  <li>
+                                        <a class="dropdown-item" href="{% url 'user-profile' user.id %}">
+                                            <img class="img-circle" src="{{user.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                            {{ user.username }}
+                                        </a><hr>
+                                  </li>
+                                {% endfor %}
+                            </div>
+                        </p><hr> -->
+                        <p class="card-text">{{room.description}}</p>
+  
+                        <!--Chat Section-->
+                        <div class="container-fluid">
+                            <div class="card border-primary">
+                                <div class="card-header">
+                                    <span class="badge bg-dark">
+                                    <i class="bi bi-arrow-left">{{room.topic.name}}</i>
+                                    </span>
+                                </div>
+                                <!-- Comment section -->
+                                <div class="card-body border-primary" id="scroll" style="height: 350px;">
+                                    {% for message in room_messages %}
+                                    <div class="card callout-primary">
+                                        <div class="container-fluid card-text">
+                                        
+                                            <small>
+                                                <b width="2" id="basic-addon1">
+                                                    <img class="img-circle" src="{{message.user.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                                    {{message.user.username}}
+                                                </b>  
+                                                <span class="text-mute align-right"><kbd>{{message.created|timesince}} ago</kbd></span> 
+                                            
+                                            </small>
+                                            <div class="container">
+                                                <p class="card-text">
+                                                   
+                                                    <p>{{message.body}}</p>
+                                                    
+                                                    {% if request.user == message.user %}
+                                                    <a href="{% url 'delete-message' message.id %}" class="card-link align-right" style="text-decoration: None;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                        </svg>
+                                                    </a>
+                                                    {% endif %}  
+                                                </p>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                    </div><br>
+                                    {% endfor %}
+                                    <div>
+
+                                    </div> 
+                                    
+
+                                </div>
+                                <!-- Comment text -->
+                                {% if request.user.is_authenticated %}
+                                <form class="d-flex align-middle" method="POST" role="text" action="">
+                                    {% csrf_token %}
+                                    <input class="form-control me-2" type="text" placeholder="Message..." aria-label="text" name="body">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+  
+                    </div>
+                    <div class="card-footer text-muted">
+                        {{room.created|timesince}}
+                    </div>
+                </div>
+  
+            </div>
+            <div class="col col-md-3">
+                
+                <!-- Participants side bar -->
+                <div class="card text-dark bg-light mb-3 shadow-lg mb-10 d-none d-sm-block" style="max-width: 18rem;">
+                  <div class="card-header"><i>Participants <span class="badge bg-dark align-right">{{participants.count}} Joined</span></i></div>
+  
+                  <!-- Usernames of room paricipants -->
+                  <div class="card-body" id="scrollable" style="height: 620px;">
+                    {% for user in participants %}
+                    <p>
+                        <a class="dropdown-item" href="{% url 'user-profile' user.id %}">
+                            <img class="img-circle" src="{{user.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                            {{ user.username }}
+                        </a>
+                    </p>
+                    {% endfor %}
+                  </div>
+                </div>
+                
+            </div>
+        </div>
+        <!-- end room -->
+    </div>
+{% endblock %}

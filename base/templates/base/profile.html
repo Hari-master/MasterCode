@@ -1,0 +1,99 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{% load static %}
+    <div class="container-fluid">
+
+        
+        <div class="row justify-content-md-center">
+            
+
+            <!-- Profile info -->
+            <div class="card col-md-5 shadow-lg mb-5 bg-light">
+                <div class="text-center ">
+                    
+                    <div><br>
+                        <!-- image avatar -->                     
+                        <img src="{{user.avatar.url}}" width="300px" height="300px" style="border-radius: 1000px;"/>
+                    </div>
+                    <h3 class="card-title" > {{user.first_name}} {{user.last_name}} </h3>
+                    <span><i>@{{user.username}} <br> {{user.email}}</i></span>  
+                    <br><br>
+
+                    <a href="{% url 'home' %}" class="btn btn-outline-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        <i class="bi bi-arrow-left">Back Home</i>
+                    </a>
+                    {% if request.user == user %}
+                    <a href="{% url 'edit-profile' %}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                        </svg>
+                        <i class="bi bi-pencil">Edit Profile</i>
+                    </a>
+                    {% endif %}
+                </div><br>
+
+                <!-- About and Bio section -->
+                <div>
+                    <p class="card-text"><span>Bio:</span></p>
+                    <p class="text-mute">
+                        <i>
+                           {{user.bio}}
+                        </i>
+                    </p>
+                    <p>Study Rooms Hosted By <i><kbd>{{user.username}}</kbd></i></p>
+                </div>
+
+                <!-- Number of rooms hosted by the user -->
+                {% for room in rooms %}
+				<div class="card border-primary shadow-lg mb-1">
+					<div class="card-header">
+
+						<i class="text-muted" style="float: right;">{{ room.created|timesince }}</i>
+						<a href="{% url 'user-profile' room.host.id %}" style="text-decoration: None;">
+                            <span class="input-group-text" width="100px" id="basic-addon1">
+                                <img class="img-circle" src="{{room.host.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                @{{ room.host.username }}
+                            </span>
+                        </a>
+	
+                        </div>
+                        <div class="card-body text-bg-light">
+                            <h5 class="card-title"><a href="{% url 'room' room.id %}" style="text-decoration: None;">{{room.name}}</a></h5>
+                            <p class="card-text">{{ room.description }}</p>
+                            <hr>
+                            <div>
+                                <a href="{% url 'room' room.id %}" style="text-decoration: None;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                        <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                                    </svg>
+                                    <i class="bi bi-arrow-left">{{room.participants.all.count}} joined</i>
+                                </a>
+                                <span class="badge bg-dark " style="float: right;">
+                                    <i class="bi bi-arrow-left">{{room.topic.name}}</i>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div><br>
+                {% endfor %}
+                </div>  
+                
+            </div>
+            
+        </div>
+
+            <!-- ROOMS -->
+            <!-- <div class="col-7">
+                <h3 class="text-center"> {{user.username}} </h3>
+                <br>
+                {% include 'base/rooms_component.html' %}
+            </div> -->
+        
+    </div>
+{% endblock  %}

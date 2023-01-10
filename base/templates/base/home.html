@@ -1,0 +1,186 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <div class="container">
+		<!-- rows and columns -->
+		<div class="row justify-content-md-center" >
+			<div class="col-3">
+
+				<!-- Browse Topic -->
+                <div class="card shadow-lg md-5 d-none d-sm-block">
+					<div class="card-header">
+						<kbd>Browse Topics</kbd>
+					</div>
+					<div class="card-body">
+						<div class="container-fluid">
+							<a href="{% url 'home' %}" class="list-group-horizontal-lg" style="text-decoration: none;" aria-current="true">
+								<i class="bi bi-arrow-left">All</i>
+								<span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topics.count}}</span>
+							</a><hr>
+							{% for topic in topics %}
+							<a href="{% url 'home' %}?q={{ topic.name }}" class="list-group-horizontal-lg" style="text-decoration: none;">
+								<i class="bi bi-arrow-left">{{ topic.name }}</i>
+								<span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topic.room_set.all.count}}</span>
+							</a><hr>
+							{% endfor %}
+
+                            <a href="{% url 'topics' %}" class="list-group-horizontal-lg" style="text-decoration: none;">
+                                <i class="bi bi-chevron-down">More</i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a><br>
+						</div>
+						
+					</div>
+				</div>
+				<!-- <div class="container-fluid">
+					<div class="list shadow-lg mb-5" id="bg" style=" border-radius: 10px;">
+						<a href="{% url 'home' %}" class="list-group-item btn-primary active" aria-current="true">
+							<i class="bi bi-arrow-left">All</i>
+                            <span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topics.count}}</span>
+						</a>
+
+                        {% for topic in topics %}
+						<a href="{% url 'home' %}?q={{ topic.name }}" class="list-group-item">
+							<i class="bi bi-arrow-left">{{ topic.name }}</i>
+							<span class="badge bg-primary rounded-pill text-end" style="float: right;">{{topic.room_set.all.count}}</span>
+						</a>
+                        {% endfor %}
+
+						<a href="{% url 'topics' %}" class="list-group-item text-center">
+							<i class="bi bi-chevron-down">More</i>
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+							</svg>
+						</a><br>
+					</div>
+				</div> -->
+			</div>
+			<!-- end of browse topic -->
+
+			<!-- Study Rooms side -->
+			<div class="col-md-6">
+                <div class="container-sm d-block d-sm-none">
+                    <form class="d-flex" role="search" method="GET" action="{% url 'home' %}" >
+                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="q">
+                        <button class="btn btn-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </form><hr>
+                    <a type="button" href="{% url 'topics' %}" class="btn btn-primary btn-md"><i>Browse Topic</i></a>
+                    <a type="button" href="{% url 'recent-activities' %}" class="btn btn-secondary btn-md align-right"><i>Recent Activities</i></a>
+                </div>
+				<h3><i>Study Rooms</i></h3>
+				<kbd>{{room_count}} Rooms Available</kbd>
+				<a href="{% url 'create-room' %}" class="btn btn-primary" style="float: right;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+					</svg>
+					<i class="bi bi-plus-lg">Create Room</i>
+				</a>
+				<br><br>
+                {% for room in rooms %}
+				<div class="card shadow-lg mb-10">
+					<div class="card-header">
+
+						<i class="text-muted" style="float: right;">{{ room.created|timesince }}</i>
+						<a href="{% url 'user-profile' room.host.id %}" style="text-decoration: None;">
+                            <span class="input-group-text" width="100px" id="basic-addon1">
+                                <img class="img-circle" src="{{room.host.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                @{{ room.host.username }}
+                            </span>
+                        </a>
+	
+                        </div>
+                        <div class="card-body text-bg-light">
+                            <h5 class="card-title"><a href="{% url 'room' room.id %}" style="text-decoration: None;">{{room.name}}</a></h5>
+                            <p class="card-text">{{ room.description }}</p>
+                            <hr>
+                            <div>
+                                <a href="{% url 'room' room.id %}" style="text-decoration: None;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                        <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                                    </svg>
+                                    <i class="bi bi-arrow-left">{{room.participants.all.count}} joined</i>
+                                </a>
+                                <span class="badge bg-dark " style="float: right;">
+                                    <i class="bi bi-arrow-left">{{room.topic.name}}</i>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div><br>
+                {% endfor %}
+			</div>
+			<!-- end of room topic -->
+
+
+			<!-- Recent Activities side -->
+			<div class="col-3">
+				<!-- card note -->
+
+
+				<div class="card text-bg-light mb-3 shadow mb-10 d-none d-sm-block" >
+
+                    <!-- first cards header-->
+                    <div class="card-header"><kbd>Recent Activities</kbd></div>
+                    <div class="card-body" id="scrollable" style="height: 620px;" >
+                      
+                      <!-- Second card header -->
+                      {% for message in room_messages %}
+                      <div class="card card-body text-bg-light border-primary">
+                        <div class="card-title">
+                            <p class="card-text" style="float: right;">
+                                
+                                <!-- delete icons -->
+                                {% if request.user == message.user %}
+                                <a href="{% url 'delete-message' message.id %}" class="card-link" style="text-decoration: None;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'user-profile' message.user.id %}" style="text-decoration: None;">
+                                <p class="card-text">
+                                    <span class="input-group-text" width="2" id="basic-addon1">
+                                        <img class="img-circle" src="{{message.user.avatar.url}}" width="30px" height="30px" style="border-radius: 1000px;"/>
+                                        @{{message.user.username}}
+                                    </span>
+                                <span><i class="text-muted">{{message.created|timesince}}</i></span>
+                                </p>								
+                            </a>
+                        </div>
+              
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <p class="card-text">
+                            Replied to Post:
+                                <i class="text-muted">
+                                    <a href="{% url 'room' message.room.id %}" style="text-decoration: none;">
+                                        {{message.room}}
+                                    </a>
+                                </i>
+                            </p>
+                        </h6>
+                        <div class="card card-body" id="bg">
+                            <p class="card-text">{{message}}</p>
+                        </div><br>
+                      </div><br>
+                      {% endfor %}
+                      
+                      
+                    </div>
+                  </div>
+                  <!-- end of the card -->
+			</div>
+			<!-- end of recent activities -->
+		</div>
+	</div>
+{% endblock %}
