@@ -1,0 +1,42 @@
+/* 
+x-Small                        < 576px
+Small               sm         >= 576px
+Extra small
+<576px
+Small
+≥576px
+Medium
+≥768px
+Large
+≥992px
+X-Large
+≥1200px
+XX-Large
+≥1400px
+
+*/
+
+
+body{ 
+    background-image: url('../images/images.jpeg');
+}
+.align-right{
+    float: right;
+    padding: 5px;
+}
+#scroll{
+    background-image: url('../images/images.jpeg');
+    height: 400px;
+    overflow-y: auto;
+}
+#scrollable{
+    height: 400px;
+    overflow-y: auto;
+}.wrapper{
+    background-image: url('../images/images.jpeg');
+    /* background-color: rgba(82, 116, 128, 0.068); */
+}
+
+#bg{
+    background-image: url('../images/images.jpeg');
+}

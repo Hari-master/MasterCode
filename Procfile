@@ -1,1 +1,1 @@
-web: gunicorn MasterCode.wsgi
+web: gunicorn MasterCode.wsgi --log-file -
